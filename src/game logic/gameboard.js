@@ -18,53 +18,46 @@ class GameBoard {
     return board;
   }
 
-  /**
-    shipPlacementDetails should be an object with the fields:
-    xvalue
-    yvalue
-    allignment
-    shipLength
-    **/
-  placeShip(shipPlacementDetails) {
-    if (this.#incorrectAllignmentSpecified(shipPlacementDetails)) {
-      return "Incorrect allignment";
+  placeShip(ship) {
+    if (this.#incorrectAllignmentSpecified(ship)) {
+      return "Incorrect alignment";
     }
 
-    if (this.#shipWillOverflowBoard(shipPlacementDetails)) {
+    if (this.#shipWillOverflowBoard(ship)) {
       return "Ship will overflow board";
     }
 
-    if (this.#positionFilled(shipPlacementDetails)) {
+    if (this.#positionFilled(ship)) {
       return "ships are overlapping";
     }
 
-    if (shipPlacementDetails.allignment === "vertical") {
-      for (let i = 0; i < shipPlacementDetails.shipLength; i++) {
-        this.#board[shipPlacementDetails.yvalue][shipPlacementDetails.xvalue] =
-          "s";
-        shipPlacementDetails.yvalue++;
+    if (ship.alignment === "vertical") {
+      for (let i = 0; i < ship.totalLength; i++) {
+        this.#board[ship.location[1]][ship.location[0]] = "s";
+        ship.location[1]++;
       }
-    } else if (shipPlacementDetails.allignment === "horizontal") {
-      for (let i = 0; i < shipPlacementDetails.shipLength; i++) {
-        this.#board[shipPlacementDetails.yvalue][shipPlacementDetails.xvalue] =
-          "s";
-        shipPlacementDetails.xvalue++;
+    } else if (ship.alignment === "horizontal") {
+      for (let i = 0; i < ship.totalLength; i++) {
+        this.#board[ship.location[1]][ship.location[0]] = "s";
+        ship.location[0]++;
       }
     }
     return "Ship placed";
   }
 
-  #positionFilled(shipPlacementDetails) {
-    let yval = shipPlacementDetails.yvalue;
-    let xval = shipPlacementDetails.xvalue;
+  receiveAttack(x, y) {}
 
-    if (shipPlacementDetails.allignment === "vertical") {
-      for (let i = 0; i < shipPlacementDetails.shipLength; i++) {
+  #positionFilled(ship) {
+    let yval = ship.location[1];
+    let xval = ship.location[0];
+
+    if (ship.alignment === "vertical") {
+      for (let i = 0; i < ship.totalLength; i++) {
         if (this.#board[yval][xval] === "s") return true;
         yval++;
       }
     } else {
-      for (let i = 0; i < shipPlacementDetails.shipLength; i++) {
+      for (let i = 0; i < ship.totalLength; i++) {
         if (this.#board[yval][xval] === "s") return true;
         xval++;
       }
@@ -72,8 +65,8 @@ class GameBoard {
     return false;
   }
 
-  #incorrectAllignmentSpecified(shipPlacementDetails) {
-    switch (shipPlacementDetails.allignment) {
+  #incorrectAllignmentSpecified(ship) {
+    switch (ship.alignment) {
       case "vertical":
         return false;
       case "horizontal":
@@ -83,12 +76,12 @@ class GameBoard {
     }
   }
 
-  #shipWillOverflowBoard(shipPlacementDetails) {
-    let yval = shipPlacementDetails.yvalue;
-    let xval = shipPlacementDetails.xvalue;
-    let shiplen = shipPlacementDetails.shipLength;
+  #shipWillOverflowBoard(ship) {
+    let yval = ship.location[1];
+    let xval = ship.location[0];
+    let shiplen = ship.totalLength;
 
-    if (shipPlacementDetails.allignment === "vertical") {
+    if (ship.alignment === "vertical") {
       if (yval + shiplen > 10) return true;
     } else {
       if (xval + shiplen > 10) return true;

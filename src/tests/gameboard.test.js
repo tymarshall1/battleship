@@ -25,16 +25,9 @@ describe("GameBoard Functions", () => {
 
   test("Single ship placed on board at correct length vertically", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(4);
+    const ship = new Ship(4, [0, 0], "Destroyer", "vertical");
 
-    const shipPlacementDetails = {
-      xvalue: 0,
-      yvalue: 0,
-      allignment: "vertical",
-      shipLength: ship.totalLength,
-    };
-
-    gameboard.placeShip(shipPlacementDetails);
+    gameboard.placeShip(ship);
     expect(gameboard.board[0][0]).toBe("s");
     expect(gameboard.board[1][0]).toBe("s");
     expect(gameboard.board[2][0]).toBe("s");
@@ -44,16 +37,9 @@ describe("GameBoard Functions", () => {
 
   test("Single ship placed on board at correct length vertically", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(3);
+    const ship = new Ship(3, [5, 5], "Destroyer", "vertical");
 
-    const shipPlacementDetails = {
-      xvalue: 5,
-      yvalue: 5,
-      allignment: "vertical",
-      shipLength: ship.totalLength,
-    };
-
-    gameboard.placeShip(shipPlacementDetails);
+    gameboard.placeShip(ship);
     expect(gameboard.board[4][5]).toBe("");
     expect(gameboard.board[5][5]).toBe("s");
     expect(gameboard.board[6][5]).toBe("s");
@@ -63,16 +49,9 @@ describe("GameBoard Functions", () => {
 
   test("Single ship placed on board at correct length vertically", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(3);
+    const ship = new Ship(3, [5, 7], "placeholder", "vertical");
 
-    const shipPlacementDetails = {
-      xvalue: 5,
-      yvalue: 7,
-      allignment: "vertical",
-      shipLength: ship.totalLength,
-    };
-
-    gameboard.placeShip(shipPlacementDetails);
+    gameboard.placeShip(ship);
     expect(gameboard.board[4][5]).toBe("");
     expect(gameboard.board[5][5]).toBe("");
     expect(gameboard.board[6][5]).toBe("");
@@ -83,49 +62,23 @@ describe("GameBoard Functions", () => {
 
   test("Single ship placed on board vertically where it would overflow the array", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(3);
+    const ship = new Ship(3, [5, 8], "test", "vertical");
 
-    const shipPlacementDetails = {
-      xvalue: 5,
-      yvalue: 8,
-      allignment: "vertical",
-      shipLength: ship.totalLength,
-    };
-
-    console.log(gameboard.board);
-    expect(gameboard.placeShip(shipPlacementDetails)).toBe(
-      "Ship will overflow board"
-    );
+    expect(gameboard.placeShip(ship)).toBe("Ship will overflow board");
   });
 
   test("Single ship placed on board vertically where it would overflow the array", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(5);
+    const ship = new Ship(5, [2, 6], "test", "vertical");
 
-    const shipPlacementDetails = {
-      xvalue: 2,
-      yvalue: 6,
-      allignment: "vertical",
-      shipLength: ship.totalLength,
-    };
-
-    expect(gameboard.placeShip(shipPlacementDetails)).toBe(
-      "Ship will overflow board"
-    );
+    expect(gameboard.placeShip(ship)).toBe("Ship will overflow board");
   });
 
   test("Single ship placed on board at correct length horizontally", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(3);
+    const ship = new Ship(3, [5, 7], "test", "horizontal");
 
-    const shipPlacementDetails = {
-      xvalue: 5,
-      yvalue: 7,
-      allignment: "horizontal",
-      shipLength: ship.totalLength,
-    };
-
-    gameboard.placeShip(shipPlacementDetails);
+    gameboard.placeShip(ship);
     expect(gameboard.board[7][4]).toBe("");
     expect(gameboard.board[7][5]).toBe("s");
     expect(gameboard.board[7][6]).toBe("s");
@@ -136,16 +89,9 @@ describe("GameBoard Functions", () => {
 
   test("Single ship placed on board at correct length horizontally", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(4);
+    const ship = new Ship(4, [6, 9], "test", "horizontal");
 
-    const shipPlacementDetails = {
-      xvalue: 6,
-      yvalue: 9,
-      allignment: "horizontal",
-      shipLength: ship.totalLength,
-    };
-
-    gameboard.placeShip(shipPlacementDetails);
+    gameboard.placeShip(ship);
     expect(gameboard.board[9][4]).toBe("");
     expect(gameboard.board[9][5]).toBe("");
     expect(gameboard.board[9][6]).toBe("s");
@@ -156,147 +102,59 @@ describe("GameBoard Functions", () => {
 
   test("Single ship placed on board horizontally where it would overflow the array", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(5);
+    const ship = new Ship(5, [6, 6], "Destroyer", "horizontal");
 
-    const shipPlacementDetails = {
-      xvalue: 6,
-      yvalue: 6,
-      allignment: "horizontal",
-      shipLength: ship.totalLength,
-    };
-
-    expect(gameboard.placeShip(shipPlacementDetails)).toBe(
-      "Ship will overflow board"
-    );
+    expect(gameboard.placeShip(ship)).toBe("Ship will overflow board");
   });
 
   test("Incorrect allignment specified", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(5);
+    const ship = new Ship(5, [6, 6], "test ship", "wrong setting");
 
-    const shipPlacementDetails = {
-      xvalue: 6,
-      yvalue: 6,
-      allignment: "wrong setting",
-      shipLength: ship.totalLength,
-    };
-
-    expect(gameboard.placeShip(shipPlacementDetails)).toBe(
-      "Incorrect allignment"
-    );
+    expect(gameboard.placeShip(ship)).toBe("Incorrect alignment");
   });
 
   test("Multiple ships placed on same board", () => {
     const gameboard = new GameBoard();
-    const shipOne = new Ship(4);
-    const shipTwo = new Ship(6);
-    const shipThree = new Ship(3);
+    const shipOne = new Ship(4, [6, 6], "test name", "vertical");
+    const shipTwo = new Ship(6, [5, 3], "test name", "vertical");
+    const shipThree = new Ship(3, [4, 4], "test name", "vertical");
 
-    const shipOnePlacementDetails = {
-      xvalue: 6,
-      yvalue: 6,
-      allignment: "vertical",
-      shipLength: shipOne.totalLength,
-    };
-
-    const shipTwoPlacementDetails = {
-      xvalue: 5,
-      yvalue: 3,
-      allignment: "vertical",
-      shipLength: shipTwo.totalLength,
-    };
-
-    const shipThreePlacementDetails = {
-      xvalue: 4,
-      yvalue: 4,
-      allignment: "vertical",
-      shipLength: shipThree.totalLength,
-    };
-
-    expect(gameboard.placeShip(shipOnePlacementDetails)).toBe("Ship placed");
-    expect(gameboard.placeShip(shipTwoPlacementDetails)).toBe("Ship placed");
-    expect(gameboard.placeShip(shipThreePlacementDetails)).toBe("Ship placed");
+    expect(gameboard.placeShip(shipOne)).toBe("Ship placed");
+    expect(gameboard.placeShip(shipTwo)).toBe("Ship placed");
+    expect(gameboard.placeShip(shipThree)).toBe("Ship placed");
   });
 
   test("Multiple ships placed on same board", () => {
     const gameboard = new GameBoard();
-    const shipOne = new Ship(4);
-    const shipTwo = new Ship(6);
-    const shipThree = new Ship(3);
+    const shipOne = new Ship(4, [6, 6], "test name", "horizontal");
+    const shipTwo = new Ship(6, [5, 3], "test name", "vertical");
+    const shipThree = new Ship(3, [4, 4], "test name", "vertical");
 
-    const shipOnePlacementDetails = {
-      xvalue: 6,
-      yvalue: 6,
-      allignment: "horizontal",
-      shipLength: shipOne.totalLength,
-    };
-
-    const shipTwoPlacementDetails = {
-      xvalue: 5,
-      yvalue: 3,
-      allignment: "vertical",
-      shipLength: shipTwo.totalLength,
-    };
-
-    const shipThreePlacementDetails = {
-      xvalue: 4,
-      yvalue: 4,
-      allignment: "vertical",
-      shipLength: shipThree.totalLength,
-    };
-
-    expect(gameboard.placeShip(shipOnePlacementDetails)).toBe("Ship placed");
-    expect(gameboard.placeShip(shipTwoPlacementDetails)).toBe("Ship placed");
-    expect(gameboard.placeShip(shipThreePlacementDetails)).toBe("Ship placed");
+    expect(gameboard.placeShip(shipOne)).toBe("Ship placed");
+    expect(gameboard.placeShip(shipTwo)).toBe("Ship placed");
+    expect(gameboard.placeShip(shipThree)).toBe("Ship placed");
   });
 
   test("ships will not place overtop of another", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(4);
+    const shipOne = new Ship(4, [6, 6], "test name", "vertical");
+    const shipTwo = new Ship(4, [6, 6], "test name", "vertical");
 
-    const shipOnePlacementDetails = {
-      xvalue: 6,
-      yvalue: 6,
-      allignment: "vertical",
-      shipLength: ship.totalLength,
-    };
+    gameboard.placeShip(shipOne);
 
-    const shipTwoPlacementDetails = {
-      xvalue: 6,
-      yvalue: 6,
-      allignment: "vertical",
-      shipLength: ship.totalLength,
-    };
-
-    gameboard.placeShip(shipOnePlacementDetails);
-
-    expect(gameboard.placeShip(shipTwoPlacementDetails)).toBe(
-      "ships are overlapping"
-    );
+    expect(gameboard.placeShip(shipTwo)).toBe("ships are overlapping");
   });
 
   test("ship will not place overtop of another one horizontal one vertical", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(4);
+    const shipOne = new Ship(4, [6, 6], "test name", "vertical");
+    const shipTwo = new Ship(4, [4, 6], "test name", "horizontal");
 
-    const shipOnePlacementDetails = {
-      xvalue: 6,
-      yvalue: 6,
-      allignment: "vertical",
-      shipLength: ship.totalLength,
-    };
+    gameboard.placeShip(shipOne);
 
-    const shipTwoPlacementDetails = {
-      xvalue: 4,
-      yvalue: 6,
-      allignment: "horizontal",
-      shipLength: ship.totalLength,
-    };
-
-    gameboard.placeShip(shipOnePlacementDetails);
-
-    expect(gameboard.placeShip(shipTwoPlacementDetails)).toBe(
-      "ships are overlapping"
-    );
+    expect(gameboard.placeShip(shipTwo)).toBe("ships are overlapping");
   });
+
+  test("", () => {});
 });
