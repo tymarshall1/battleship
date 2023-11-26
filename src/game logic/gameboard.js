@@ -1,10 +1,15 @@
 class GameBoard {
   #board = this.#createBoard();
+  #shipsOnBoard = [];
 
   constructor() {}
 
   get board() {
     return this.#board;
+  }
+
+  get shipsOnBoard() {
+    return this.#shipsOnBoard;
   }
 
   #createBoard() {
@@ -27,38 +32,56 @@ class GameBoard {
       return "Ship will overflow board";
     }
 
-    if (this.#positionFilled(ship)) {
+    if (this.#positionFilledWithShip(ship)) {
       return "ships are overlapping";
     }
 
     if (ship.alignment === "vertical") {
       for (let i = 0; i < ship.totalLength; i++) {
-        this.#board[ship.location[1]][ship.location[0]] = "s";
+        this.#board[ship.location[1]][ship.location[0]] = ship.shipName;
         ship.location[1]++;
       }
     } else if (ship.alignment === "horizontal") {
       for (let i = 0; i < ship.totalLength; i++) {
-        this.#board[ship.location[1]][ship.location[0]] = "s";
+        this.#board[ship.location[1]][ship.location[0]] = ship.shipName;
         ship.location[0]++;
       }
     }
+    this.#shipsOnBoard.push(ship);
     return "Ship placed";
   }
 
-  receiveAttack(x, y) {}
+  receiveAttack(y, x) {
+    if (x > 10 || y > 10) return "invalid coordinates";
 
-  #positionFilled(ship) {
+    if (this.#board[y][x] === "") {
+      this.#board[y][x] = "m";
+      return "miss";
+    }
+
+    for (let i = 0; i < this.#shipsOnBoard.length; i++) {
+      if (this.#board[y][x] === this.#shipsOnBoard[i].shipName) {
+        this.#shipsOnBoard[i].hit();
+        this.#board[y][x] = "h";
+        return "hit";
+      }
+    }
+
+    return "cant attack here";
+  }
+
+  #positionFilledWithShip(ship) {
     let yval = ship.location[1];
     let xval = ship.location[0];
 
     if (ship.alignment === "vertical") {
       for (let i = 0; i < ship.totalLength; i++) {
-        if (this.#board[yval][xval] === "s") return true;
+        if (this.#board[yval][xval] !== "") return true;
         yval++;
       }
     } else {
       for (let i = 0; i < ship.totalLength; i++) {
-        if (this.#board[yval][xval] === "s") return true;
+        if (this.#board[yval][xval] !== "") return true;
         xval++;
       }
     }

@@ -28,10 +28,10 @@ describe("GameBoard Functions", () => {
     const ship = new Ship(4, [0, 0], "Destroyer", "vertical");
 
     gameboard.placeShip(ship);
-    expect(gameboard.board[0][0]).toBe("s");
-    expect(gameboard.board[1][0]).toBe("s");
-    expect(gameboard.board[2][0]).toBe("s");
-    expect(gameboard.board[3][0]).toBe("s");
+    expect(gameboard.board[0][0]).toBe("Destroyer");
+    expect(gameboard.board[1][0]).toBe("Destroyer");
+    expect(gameboard.board[2][0]).toBe("Destroyer");
+    expect(gameboard.board[3][0]).toBe("Destroyer");
     expect(gameboard.board[4][0]).toBe("");
   });
 
@@ -41,23 +41,23 @@ describe("GameBoard Functions", () => {
 
     gameboard.placeShip(ship);
     expect(gameboard.board[4][5]).toBe("");
-    expect(gameboard.board[5][5]).toBe("s");
-    expect(gameboard.board[6][5]).toBe("s");
-    expect(gameboard.board[7][5]).toBe("s");
+    expect(gameboard.board[5][5]).toBe("Destroyer");
+    expect(gameboard.board[6][5]).toBe("Destroyer");
+    expect(gameboard.board[7][5]).toBe("Destroyer");
     expect(gameboard.board[8][5]).toBe("");
   });
 
   test("Single ship placed on board at correct length vertically", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(3, [5, 7], "placeholder", "vertical");
+    const ship = new Ship(3, [5, 7], "Destroyer", "vertical");
 
     gameboard.placeShip(ship);
     expect(gameboard.board[4][5]).toBe("");
     expect(gameboard.board[5][5]).toBe("");
     expect(gameboard.board[6][5]).toBe("");
-    expect(gameboard.board[7][5]).toBe("s");
-    expect(gameboard.board[8][5]).toBe("s");
-    expect(gameboard.board[9][5]).toBe("s");
+    expect(gameboard.board[7][5]).toBe("Destroyer");
+    expect(gameboard.board[8][5]).toBe("Destroyer");
+    expect(gameboard.board[9][5]).toBe("Destroyer");
   });
 
   test("Single ship placed on board vertically where it would overflow the array", () => {
@@ -76,28 +76,28 @@ describe("GameBoard Functions", () => {
 
   test("Single ship placed on board at correct length horizontally", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(3, [5, 7], "test", "horizontal");
+    const ship = new Ship(3, [5, 7], "Destroyer", "horizontal");
 
     gameboard.placeShip(ship);
     expect(gameboard.board[7][4]).toBe("");
-    expect(gameboard.board[7][5]).toBe("s");
-    expect(gameboard.board[7][6]).toBe("s");
-    expect(gameboard.board[7][7]).toBe("s");
+    expect(gameboard.board[7][5]).toBe("Destroyer");
+    expect(gameboard.board[7][6]).toBe("Destroyer");
+    expect(gameboard.board[7][7]).toBe("Destroyer");
     expect(gameboard.board[7][8]).toBe("");
     expect(gameboard.board[7][9]).toBe("");
   });
 
   test("Single ship placed on board at correct length horizontally", () => {
     const gameboard = new GameBoard();
-    const ship = new Ship(4, [6, 9], "test", "horizontal");
+    const ship = new Ship(4, [6, 9], "Destroyer", "horizontal");
 
     gameboard.placeShip(ship);
     expect(gameboard.board[9][4]).toBe("");
     expect(gameboard.board[9][5]).toBe("");
-    expect(gameboard.board[9][6]).toBe("s");
-    expect(gameboard.board[9][7]).toBe("s");
-    expect(gameboard.board[9][8]).toBe("s");
-    expect(gameboard.board[9][9]).toBe("s");
+    expect(gameboard.board[9][6]).toBe("Destroyer");
+    expect(gameboard.board[9][7]).toBe("Destroyer");
+    expect(gameboard.board[9][8]).toBe("Destroyer");
+    expect(gameboard.board[9][9]).toBe("Destroyer");
   });
 
   test("Single ship placed on board horizontally where it would overflow the array", () => {
@@ -156,5 +156,52 @@ describe("GameBoard Functions", () => {
     expect(gameboard.placeShip(shipTwo)).toBe("ships are overlapping");
   });
 
-  test("", () => {});
+  test("recieveAttack function will not allow invalid coordinates", () => {
+    const gameboard = new GameBoard();
+    expect(gameboard.receiveAttack(11, 10)).toBe("invalid coordinates");
+  });
+
+  test("recieveAttack function will not allow invalid coordinates", () => {
+    const gameboard = new GameBoard();
+    expect(gameboard.receiveAttack(4, 13)).toBe("invalid coordinates");
+  });
+
+  test("recieveAttack function marks the board with an 'm' on a miss", () => {
+    const gameboard = new GameBoard();
+    const ship = new Ship(4, [6, 6], "test name", "vertical");
+    gameboard.placeShip(ship);
+    expect(gameboard.receiveAttack(5, 6)).toBe("miss");
+    expect(gameboard.board[5][6]).toBe("m");
+  });
+
+  test("recieveAttack function returns hit when a ship is hit", () => {
+    const gameboard = new GameBoard();
+    const ship = new Ship(4, [4, 4], "test name", "vertical");
+    gameboard.placeShip(ship);
+    expect(gameboard.receiveAttack(4, 4)).toBe("hit");
+    expect(gameboard.receiveAttack(6, 4)).toBe("hit");
+  });
+
+  test("recieveAttack function marks the board with an 'h' on a hit", () => {
+    const gameboard = new GameBoard();
+    const ship = new Ship(4, [2, 2], "Destroyer", "horizontal");
+    gameboard.placeShip(ship);
+    expect(gameboard.receiveAttack(2, 2)).toBe("hit");
+    expect(gameboard.receiveAttack(2, 4)).toBe("hit");
+    expect(gameboard.board[2][2]).toBe("h");
+    expect(gameboard.board[2][3]).toBe("Destroyer");
+    expect(gameboard.board[2][4]).toBe("h");
+    expect(gameboard.board[2][5]).toBe("Destroyer");
+    expect(gameboard.board[2][6]).toBe("");
+  });
+
+  test("recieveAttack function returns 'cant attack here' if spot is already marked as hit or miss", () => {
+    const gameboard = new GameBoard();
+    const ship = new Ship(4, [2, 2], "test name", "horizontal");
+    gameboard.placeShip(ship);
+    gameboard.receiveAttack(2, 2);
+    gameboard.receiveAttack(3, 2);
+    expect(gameboard.receiveAttack(2, 2)).toBe("cant attack here");
+    expect(gameboard.receiveAttack(3, 2)).toBe("cant attack here");
+  });
 });
