@@ -70,6 +70,15 @@ class GameBoard {
     return "cant attack here";
   }
 
+  allShipsSunk() {
+    for (let i = 0; i < this.#shipsOnBoard.length; i++) {
+      if (!this.#shipsOnBoard[i].isSunk()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   #positionFilledWithShip(ship) {
     let yval = ship.location[1];
     let xval = ship.location[0];

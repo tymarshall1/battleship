@@ -204,4 +204,45 @@ describe("GameBoard Functions", () => {
     expect(gameboard.receiveAttack(2, 2)).toBe("cant attack here");
     expect(gameboard.receiveAttack(3, 2)).toBe("cant attack here");
   });
+
+  test("allShipsSunk function returns true if all the ships on board have been sunk", () => {
+    const gameboard = new GameBoard();
+    const shipOne = new Ship(4, [2, 2], "test name", "horizontal");
+    const shipTwo = new Ship(2, [1, 1], "test name two", "vertical");
+
+    gameboard.placeShip(shipOne);
+    gameboard.placeShip(shipTwo);
+
+    //sinks ship one
+    gameboard.receiveAttack(2, 2);
+    gameboard.receiveAttack(2, 3);
+    gameboard.receiveAttack(2, 4);
+    gameboard.receiveAttack(2, 5);
+
+    //sinks ship two
+    gameboard.receiveAttack(1, 1);
+    gameboard.receiveAttack(2, 1);
+
+    expect(gameboard.allShipsSunk()).toBeTruthy();
+  });
+
+  test("allShipsSunk function returns false if there is still ships on board", () => {
+    const gameboard = new GameBoard();
+    const shipOne = new Ship(4, [2, 2], "test name", "horizontal");
+    const shipTwo = new Ship(2, [1, 1], "test name two", "vertical");
+
+    gameboard.placeShip(shipOne);
+    gameboard.placeShip(shipTwo);
+
+    //sinks ship one
+    gameboard.receiveAttack(2, 2);
+    gameboard.receiveAttack(2, 3);
+    gameboard.receiveAttack(2, 4);
+
+    //sinks ship two
+    gameboard.receiveAttack(1, 1);
+    gameboard.receiveAttack(2, 1);
+
+    expect(gameboard.allShipsSunk()).toBeFalsy();
+  });
 });
