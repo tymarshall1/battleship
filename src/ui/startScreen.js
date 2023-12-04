@@ -2,6 +2,7 @@ import "./startScreen.css";
 import Player from "../game logic/player.js";
 
 const startScreen = () => {
+  const content = document.querySelector("content");
   const startScreenContainer = document.createElement("div");
   const label = document.createElement("label");
   const textInput = document.createElement("input");
@@ -36,7 +37,8 @@ const startScreen = () => {
   startScreenContainer.appendChild(errorMsg);
   startScreenContainer.appendChild(textInput);
   startScreenContainer.appendChild(startGameBtn);
-  return { startScreenContainer, createPlayerPromise };
+  content.appendChild(startScreenContainer);
+  return createPlayerPromise;
 };
 
 export default startScreen;

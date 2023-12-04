@@ -28,6 +28,14 @@ class Ship {
     return this.#alignment;
   }
 
+  set alignment(alignment) {
+    this.#alignment = alignment;
+  }
+
+  set location(location) {
+    this.#location = location;
+  }
+
   hit() {
     if (this.#shipLength === 0) {
       return;

@@ -1,0 +1,33 @@
+.grid-container {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.grid-col {
+  flex-direction: column;
+}
+
+.grid-square {
+  height: 45px;
+  width: 45px;
+  border: 1px solid white;
+  margin-bottom: 0.2rem;
+}
+
+.ship-highlight {
+  background-color: lightblue;
+}
+
+.ship-placed {
+  background-color: lightblue;
+}
+
+.ship-highlight-error {
+  background-color: red;
+  cursor: not-allowed;
+}
+
+.change-direction-btn {
+  width: 15%;
+  height: 30px;
+}
