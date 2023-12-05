@@ -3,11 +3,14 @@ import Ship from "../game logic/ship";
 
 const placeShipScreen = async () => {
   const content = document.querySelector("content");
-  content.appendChild(drawlGrid());
+  content.appendChild(drawGrid());
   content.style.alignItems = "center";
 
   addControlsOnScreen();
 
+  //initializing ships here with undefined for:
+  //location - user needs to select where each ship will go
+  //alignment - user will select either horizontal or vertical via a button
   const ships = [
     new Ship(5, undefined, "Carrier", undefined),
     new Ship(4, undefined, "Battleship", undefined),
@@ -16,12 +19,7 @@ const placeShipScreen = async () => {
     new Ship(2, undefined, "Partrol Boat", undefined),
   ];
 
-  for (const ship of ships) {
-    const hoverEventRef = addHoverEffect(ship.totalLength);
-    //placeShipOnClick will modify the current ships alignment and location fields
-    await placeShipOnClick(ship);
-    removeHoverEffect(hoverEventRef);
-  }
+  await placeShipsSequentially(ships);
 
   for (const ship of ships) {
     console.log(ship);
@@ -30,7 +28,7 @@ const placeShipScreen = async () => {
   return ships;
 };
 
-const drawlGrid = () => {
+const drawGrid = () => {
   const container = document.createElement("div");
 
   for (let i = 0; i < 10; i++) {
@@ -70,17 +68,49 @@ const addControlsOnScreen = () => {
 
 const addHoverEffect = (shipLength) => {
   const squares = document.querySelectorAll(".grid-square");
-
   const hoverHandler = (e) => {
-    handleHover(e, shipLength);
+    addHoverEffectHelper(e, shipLength);
   };
 
   squares.forEach((gridSquare) => {
     gridSquare.addEventListener("mouseover", hoverHandler);
     gridSquare.addEventListener("mouseleave", hoverHandler);
   });
-
   return hoverHandler;
+};
+
+const addHoverEffectHelper = (event, shipLength) => {
+  const oppositeAlignment = document.querySelector(
+    ".change-direction-btn"
+  ).textContent;
+  const xval = event.target.id[2];
+  const yval = event.target.id[0];
+  resetUnwantedStyling();
+  //highlight the squares vertically
+  if (oppositeAlignment === "Horizontal") {
+    for (let i = 0; i < shipLength; i++) {
+      const startOfHighlight = i + Number(yval);
+      if (!isValidSquare(event, shipLength, oppositeAlignment)) {
+        event.target.classList.toggle("ship-highlight-error");
+        return;
+      }
+      document
+        .getElementById(`${[startOfHighlight, xval]}`)
+        .classList.toggle("ship-highlight");
+    }
+    return;
+  }
+  //highlight the squares horizontally
+  for (let i = 0; i < shipLength; i++) {
+    const startOfHighlight = i + Number(xval);
+    if (!isValidSquare(event, shipLength, oppositeAlignment)) {
+      event.target.classList.toggle("ship-highlight-error");
+      return;
+    }
+    document
+      .getElementById(`${[yval, startOfHighlight]}`)
+      .classList.toggle("ship-highlight");
+  }
 };
 
 const removeHoverEffect = (hoverHandler) => {
@@ -95,11 +125,14 @@ const removeHoverEffect = (hoverHandler) => {
 //this function calls placeShipOnClickHelper
 //which will modify the ship objects fields
 const placeShipOnClick = (ship) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const squares = document.querySelectorAll(".grid-square");
 
     const clickHandler = (e) => {
-      placeShipOnClickHelper(e, ship);
+      let shipPlaced = placeShipOnClickHelper(e, ship);
+      if (!shipPlaced) {
+        reject();
+      }
       squares.forEach((gridSquare) => {
         gridSquare.removeEventListener("click", clickHandler);
       });
@@ -112,80 +145,88 @@ const placeShipOnClick = (ship) => {
   });
 };
 
-//this function will modifiy the passed in ship value
+//this function will modifiy the passed in ships fields
 const placeShipOnClickHelper = (e, ship) => {
-  const btnVal = document.querySelector(".change-direction-btn").textContent;
-  let xval = e.target.id[2];
-  let yval = e.target.id[0];
+  const oppositeAlignment = document.querySelector(
+    ".change-direction-btn"
+  ).textContent;
+
+  if (!isValidSquare(e, ship.totalLength, oppositeAlignment)) return false;
+
+  const xval = e.target.id[2];
+  const yval = e.target.id[0];
   ship.location = e.target.id;
 
-  if (btnVal === "Horizontal") {
+  if (oppositeAlignment === "Horizontal") {
     ship.alignment = "Vertical";
-
     for (let i = 0; i < ship.totalLength; i++) {
-      let startOfHighlight = i + Number(yval);
-
-      if (e.target.classList.contains("ship-highlight-error")) {
-        console.log("error");
-        return;
-      }
+      const startOfHighlight = i + Number(yval);
       document
         .getElementById(`${[startOfHighlight, xval]}`)
-        .classList.toggle("ship-placed");
+        .classList.add("ship-placed");
     }
-  } else {
-    ship.alignment = "Horizontal";
-
-    for (let i = 0; i < ship.totalLength; i++) {
-      let startOfHighlight = i + Number(xval);
-
-      if (e.target.classList.contains("ship-highlight-error")) {
-        return;
-      }
-
-      document
-        .getElementById(`${[yval, startOfHighlight]}`)
-        .classList.toggle("ship-placed");
-    }
+    return true;
   }
+
+  ship.alignment = "Horizontal";
+  for (let i = 0; i < ship.totalLength; i++) {
+    const startOfHighlight = i + Number(xval);
+    document
+      .getElementById(`${[yval, startOfHighlight]}`)
+      .classList.add("ship-placed");
+  }
+  return true;
 };
 
-const handleHover = (event, shipLength) => {
-  const btnVal = document.querySelector(".change-direction-btn").textContent;
-  let xval = event.target.id[2];
-  let yval = event.target.id[0];
+const isValidSquare = (e, shipLength, oppositeAlignment) => {
+  const xval = e.target.id[2];
+  const yval = e.target.id[0];
 
-  //highlight the squares vertically
-  if (btnVal === "Horizontal") {
+  if (oppositeAlignment === "Horizontal") {
     for (let i = 0; i < shipLength; i++) {
-      let startOfHighlight = i + Number(yval);
-
-      //highlight will overflow grid so color it red
-      if (startOfHighlight > 9) {
-        event.target.classList.toggle("ship-highlight-error");
-        //need to disable the div from being able to be clicked
-        return;
-      }
-
-      document
-        .getElementById(`${[startOfHighlight, xval]}`)
-        .classList.toggle("ship-highlight");
+      const startOfHighlight = i + Number(yval);
+      const square = document.getElementById(`${[startOfHighlight, xval]}`);
+      if (startOfHighlight > 9 || square.classList.contains("ship-placed"))
+        return false;
     }
-    //highlight the squares horizontally
-  } else {
-    for (let i = 0; i < shipLength; i++) {
-      let startOfHighlight = i + Number(xval);
+    return true;
+  }
 
-      //highlight will overflow grid so color it red
-      if (startOfHighlight > 9) {
-        event.target.classList.toggle("ship-highlight-error");
+  for (let i = 0; i < shipLength; i++) {
+    const startOfHighlight = i + Number(xval);
+    const square = document.getElementById(`${[yval, startOfHighlight]}`);
+    if (startOfHighlight > 9 || square.classList.contains("ship-placed"))
+      return false;
+  }
+  return true;
+};
 
-        return;
+const resetUnwantedStyling = () => {
+  const squares = document.querySelectorAll(".grid-square");
+
+  squares.forEach((gridSquare) => {
+    gridSquare.classList.remove("ship-highlight-error");
+    gridSquare.classList.remove("ship-highlight");
+  });
+};
+
+const placeShipsSequentially = async (shipArray) => {
+  let i = 0;
+  let allShipsPlaced = false;
+
+  while (!allShipsPlaced) {
+    const hoverEventRef = addHoverEffect(shipArray[i].totalLength);
+    try {
+      //placeShipOnClick will modify the current ships alignment and location fields
+      await placeShipOnClick(shipArray[i]);
+      i++;
+      if (i === 5) {
+        allShipsPlaced = true;
       }
-
-      document
-        .getElementById(`${[yval, startOfHighlight]}`)
-        .classList.toggle("ship-highlight");
+    } catch (error) {
+      console.log("rejected trying again...");
+    } finally {
+      removeHoverEffect(hoverEventRef);
     }
   }
 };
