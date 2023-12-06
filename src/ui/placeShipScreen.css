@@ -31,3 +31,7 @@
   width: 15%;
   height: 30px;
 }
+
+.align-items-center {
+  align-items: center;
+}

@@ -4,8 +4,7 @@ import Ship from "../game logic/ship";
 const placeShipScreen = async () => {
   const content = document.querySelector("content");
   content.appendChild(drawGrid());
-  content.style.alignItems = "center";
-
+  content.classList.add("align-items-center");
   addControlsOnScreen();
 
   //initializing ships here with undefined for:
@@ -230,4 +229,4 @@ const placeShipsSequentially = async (shipArray) => {
   }
 };
 
-export default placeShipScreen;
+export { placeShipScreen, drawGrid };

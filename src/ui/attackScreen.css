@@ -1,0 +1,53 @@
+.grid-gap {
+  gap: 2rem;
+}
+
+.directions-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background-color: rgb(87, 96, 99);
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.player-grid,
+.computer-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  color: #d0ccd0;
+  font-size: 1.25rem;
+}
+
+.computer-grid > .grid-container > .grid-col > .grid-square:hover {
+  cursor: crosshair;
+}
+.computer-grid > .grid-container > .grid-col > .flex-centered:hover {
+  cursor: not-allowed;
+}
+
+.ship {
+  background-color: aqua;
+}
+.flex-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hit-circle,
+.miss-circle {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.hit-circle {
+  background-color: red;
+}

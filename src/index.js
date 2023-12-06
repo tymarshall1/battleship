@@ -1,21 +1,24 @@
 import "./style.css";
 import startScreen from "./ui/startScreen";
 import Player from "./game logic/player.js";
-import placeShipScreen from "./ui/placeShipScreen";
+import { placeShipScreen } from "./ui/placeShipScreen";
 import GameBoard from "./game logic/gameboard";
 import Ship from "./game logic/ship";
+import attackScreen from "./ui/attackScreen";
 
 const gameLoop = async () => {
   //shows start screen and initilizes players
-  const { player, computer } = await initPlayers();
+  // const { player, computer } = await initPlayers();
 
-  clearGameScreen();
+  // clearGameScreen();
 
   //shows place ship screen and initilizes the player
   //and computer gameboards with ships
   const { playerGameBoard, computerGameBoard } = await initGameBoards();
 
   clearGameScreen();
+  clearControls();
+  attackScreen(playerGameBoard, computerGameBoard);
 };
 
 const initPlayers = async () => {
@@ -61,4 +64,7 @@ const clearGameScreen = () => {
   document.querySelector("content").innerHTML = "";
 };
 
+const clearControls = () => {
+  document.querySelector("#controls").innerHTML = "";
+};
 gameLoop();
