@@ -16,14 +16,10 @@ const placeShipScreen = async () => {
     new Ship(4, undefined, "Battleship", undefined),
     new Ship(3, undefined, "Destroyer", undefined),
     new Ship(3, undefined, "Submarine", undefined),
-    new Ship(2, undefined, "Partrol Boat", undefined),
+    new Ship(2, undefined, "Patrol Boat", undefined),
   ];
 
   await placeShipsSequentially(ships);
-
-  for (const ship of ships) {
-    console.log(ship);
-  }
 
   return ships;
 };
@@ -52,7 +48,7 @@ const addControlsOnScreen = () => {
   const changeDirectionBtn = document.createElement("button");
   const h1 = document.createElement("h1");
 
-  h1.textContent = `Place your {blah blach lachh}`;
+  h1.id = "directionText";
 
   changeDirectionBtn.textContent = "Horizontal";
   changeDirectionBtn.classList.add("change-direction-btn");
@@ -155,10 +151,10 @@ const placeShipOnClickHelper = (e, ship) => {
 
   const xval = e.target.id[2];
   const yval = e.target.id[0];
-  ship.location = e.target.id;
+  ship.location = [xval, yval];
 
   if (oppositeAlignment === "Horizontal") {
-    ship.alignment = "Vertical";
+    ship.alignment = "vertical";
     for (let i = 0; i < ship.totalLength; i++) {
       const startOfHighlight = i + Number(yval);
       document
@@ -168,7 +164,7 @@ const placeShipOnClickHelper = (e, ship) => {
     return true;
   }
 
-  ship.alignment = "Horizontal";
+  ship.alignment = "horizontal";
   for (let i = 0; i < ship.totalLength; i++) {
     const startOfHighlight = i + Number(xval);
     document
@@ -218,6 +214,9 @@ const placeShipsSequentially = async (shipArray) => {
     const hoverEventRef = addHoverEffect(shipArray[i].totalLength);
     try {
       //placeShipOnClick will modify the current ships alignment and location fields
+      document.getElementById(
+        "directionText"
+      ).textContent = `Place Down Your ${shipArray[i].shipName}!`;
       await placeShipOnClick(shipArray[i]);
       i++;
       if (i === 5) {

@@ -80,8 +80,8 @@ class GameBoard {
   }
 
   #positionFilledWithShip(ship) {
-    let yval = ship.location[1];
-    let xval = ship.location[0];
+    let yval = Number(ship.location[1]);
+    let xval = Number(ship.location[0]);
 
     if (ship.alignment === "vertical") {
       for (let i = 0; i < ship.totalLength; i++) {
@@ -112,11 +112,10 @@ class GameBoard {
     let yval = ship.location[1];
     let xval = ship.location[0];
     let shiplen = ship.totalLength;
-
     if (ship.alignment === "vertical") {
-      if (yval + shiplen > 10) return true;
+      if (Number(yval) + shiplen > 10) return true;
     } else {
-      if (xval + shiplen > 10) return true;
+      if (Number(xval) + shiplen > 10) return true;
     }
     return false;
   }
