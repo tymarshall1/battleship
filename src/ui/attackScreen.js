@@ -1,24 +1,22 @@
 import { drawGrid } from "./placeShipScreen";
 import "./attackScreen.css";
 
-const attackScreen = (playerGameBoard, computerGameBoard) => {
+const attackScreen = async (playerGameBoard, computerGameBoard) => {
   const content = document.querySelector("content");
 
   content.classList.add("grid-gap");
-  content.classList.remove("align-items-center");
+  //   content.classList.remove("align-items-center");
 
   addDirectionMsg("Directions will be going in here ");
 
-  const { playerGridContainer, computerGridContainer } = setupGrids(
-    playerGameBoard,
-    computerGameBoard
-  );
+  const { playerGridContainer, computerGridContainer } =
+    setupGrids(playerGameBoard);
 
   content.appendChild(playerGridContainer);
   content.appendChild(computerGridContainer);
 };
 
-const setupGrids = (playerGameBoard, computerGameBoard) => {
+const setupGrids = (playerGameBoard) => {
   const playersGrid = drawGrid();
   const computersGrid = drawGrid();
 
@@ -27,18 +25,6 @@ const setupGrids = (playerGameBoard, computerGameBoard) => {
     col.childNodes.forEach((gridSquare, j) => {
       if (playerGameBoard.board[j][i] !== "") {
         gridSquare.classList.add("ship");
-      }
-    });
-  });
-
-  const computerCols = computersGrid.childNodes;
-  computerCols.forEach((col, i) => {
-    col.childNodes.forEach((gridSquare, j) => {
-      gridSquare.addEventListener("click", (e) =>
-        handlePlayerAttack(e, computerGameBoard.board)
-      );
-      if (computerGameBoard.board[j][i] !== "") {
-        // gridSquare.classList.add("");
       }
     });
   });
@@ -60,10 +46,35 @@ const setupGrids = (playerGameBoard, computerGameBoard) => {
   return { playerGridContainer, computerGridContainer };
 };
 
+const playersAtkChoice = (computerGameBoard) => {
+  return new Promise((resolve, reject) => {
+    const computerCols = document.querySelector(
+      ".computer-grid > .grid-container"
+    ).childNodes;
+
+    const clickHandler = (e) => {
+      const attackPlaced = handlePlayerAttack(e, computerGameBoard);
+      computerCols.forEach((col) => {
+        col.childNodes.forEach((gridSquare) => {
+          gridSquare.removeEventListener("click", clickHandler);
+        });
+      });
+      if (!attackPlaced) reject("incorrect Location");
+      else resolve([e.target.id[0], e.target.id[2]]);
+    };
+
+    computerCols.forEach((col) => {
+      col.childNodes.forEach((gridSquare) => {
+        gridSquare.addEventListener("click", clickHandler);
+      });
+    });
+  });
+};
+
 const handlePlayerAttack = (e, computerGameBoard) => {
-  if (e.target.classList.contains("hit-circle")) return;
-  else if (e.target.classList.contains("miss-circle")) return;
-  else if (e.target.classList.contains("flex-centered")) return;
+  if (e.target.classList.contains("hit-circle")) return false;
+  else if (e.target.classList.contains("miss-circle")) return false;
+  else if (e.target.classList.contains("flex-centered")) return false;
 
   const xval = e.target.id[2];
   const yval = e.target.id[0];
@@ -77,9 +88,11 @@ const handlePlayerAttack = (e, computerGameBoard) => {
   ) {
     circle.classList.add("miss-circle");
     e.target.appendChild(circle);
+    return true;
   } else {
     circle.classList.add("hit-circle");
     e.target.appendChild(circle);
+    return true;
   }
 };
 
@@ -96,4 +109,4 @@ const addDirectionMsg = (msg) => {
   controls.appendChild(directionContainer);
 };
 
-export default attackScreen;
+export { attackScreen, playersAtkChoice };

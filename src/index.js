@@ -4,13 +4,13 @@ import Player from "./game logic/player.js";
 import { placeShipScreen } from "./ui/placeShipScreen";
 import GameBoard from "./game logic/gameboard";
 import Ship from "./game logic/ship";
-import attackScreen from "./ui/attackScreen";
+import { attackScreen, playersAtkChoice } from "./ui/attackScreen";
 
 const gameLoop = async () => {
   //shows start screen and initilizes players
-  // const { player, computer } = await initPlayers();
+  const { player, computer } = await initPlayers();
 
-  // clearGameScreen();
+  clearGameScreen();
 
   //shows place ship screen and initilizes the player
   //and computer gameboards with ships
@@ -19,6 +19,25 @@ const gameLoop = async () => {
   clearGameScreen();
   clearControls();
   attackScreen(playerGameBoard, computerGameBoard);
+
+  //while the computer and player both have ships still
+  while (!playerGameBoard.allShipsSunk() || !computerGameBoard.allShipsSunk()) {
+    try {
+      const playersAtk = await playersAtkChoice(computerGameBoard.board);
+      console.log(playersAtk);
+      // computerGameBoard.receiveAttack(playersAtk[0], playersAtk[1]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //player chooses attack location
+  //gameboard is marked
+  //turns rotated
+
+  //computer chooses attack location
+  //gameboard marked
+  //turns rotated
 };
 
 const initPlayers = async () => {
