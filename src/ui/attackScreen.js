@@ -109,4 +109,28 @@ const addDirectionMsg = (msg) => {
   controls.appendChild(directionContainer);
 };
 
-export { attackScreen, playersAtkChoice };
+const renderComputersAttack = (yval, xval) => {
+  const playerGridSquares = document.querySelectorAll(
+    ".player-grid > .grid-container > .grid-col > .grid-square"
+  );
+  const circle = document.createElement("div");
+
+  playerGridSquares.forEach((gridSquare) => {
+    if (
+      Number(gridSquare.id[0]) === yval &&
+      Number(gridSquare.id[2]) === xval
+    ) {
+      if (gridSquare.classList.contains("ship")) {
+        gridSquare.classList.add("flex-centered");
+        circle.classList.add("hit-circle");
+        gridSquare.appendChild(circle);
+      } else {
+        gridSquare.classList.add("flex-centered");
+        circle.classList.add("miss-circle");
+        gridSquare.appendChild(circle);
+      }
+    }
+  });
+};
+
+export { attackScreen, playersAtkChoice, renderComputersAttack };

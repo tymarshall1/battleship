@@ -41,7 +41,7 @@ class Player {
         throw new Error("Computer choice was greater than 9");
       }
 
-      if (gameboard[yval][xval] === "") {
+      if (gameboard[yval][xval] !== "m" && gameboard[yval][xval] !== "h") {
         this.#attack = [yval, xval];
         break;
       }
