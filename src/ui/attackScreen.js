@@ -7,8 +7,6 @@ const attackScreen = async (playerGameBoard, computerGameBoard) => {
   content.classList.add("grid-gap");
   //   content.classList.remove("align-items-center");
 
-  addDirectionMsg("Directions will be going in here ");
-
   const { playerGridContainer, computerGridContainer } =
     setupGrids(playerGameBoard);
 
@@ -96,7 +94,7 @@ const handlePlayerAttack = (e, computerGameBoard) => {
   }
 };
 
-const addDirectionMsg = (msg) => {
+const addDirectionMsg = (msg, time) => {
   const controls = document.getElementById("controls");
 
   const directionContainer = document.createElement("div");
@@ -104,9 +102,17 @@ const addDirectionMsg = (msg) => {
 
   const directions = document.createElement("h1");
   directions.textContent = msg;
+  directions.classList.add("typing-effect");
   directionContainer.appendChild(directions);
 
   controls.appendChild(directionContainer);
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+};
+
+const clearDirectionMsg = () => {
+  document.getElementById("controls").innerHTML = "";
 };
 
 const renderComputersAttack = (yval, xval) => {
@@ -133,4 +139,10 @@ const renderComputersAttack = (yval, xval) => {
   });
 };
 
-export { attackScreen, playersAtkChoice, renderComputersAttack };
+export {
+  attackScreen,
+  playersAtkChoice,
+  renderComputersAttack,
+  addDirectionMsg,
+  clearDirectionMsg,
+};

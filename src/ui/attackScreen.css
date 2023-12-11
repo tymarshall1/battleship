@@ -6,10 +6,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 0.8rem;
   background-color: rgb(87, 96, 99);
   padding: 1rem;
   border-radius: 1rem;
+  min-width: 60%;
+  border: 2px solid #d0ccd0;
 }
 
 .player-grid,
@@ -50,4 +52,32 @@
 
 .hit-circle {
   background-color: red;
+}
+
+.typing-effect {
+  overflow: hidden;
+  border-right: 0.15em solid orange;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 0.1em;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: rgb(87, 96, 99);
+  }
 }

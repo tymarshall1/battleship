@@ -8,6 +8,8 @@ import {
   attackScreen,
   playersAtkChoice,
   renderComputersAttack,
+  addDirectionMsg,
+  clearDirectionMsg,
 } from "./ui/attackScreen";
 
 const gameLoop = async () => {
@@ -21,22 +23,49 @@ const gameLoop = async () => {
   const { playerGameBoard, computerGameBoard } = await initGameBoards();
 
   clearGameScreen();
-  clearControls();
+  clearDirectionMsg();
+
   attackScreen(playerGameBoard, computerGameBoard);
+  await addDirectionMsg(
+    `Welcome to the battlefield, Captain ${player.displayName}.`,
+    3500
+  );
 
   //while the computer and player both have ships still
   while (!playerGameBoard.allShipsSunk() && !computerGameBoard.allShipsSunk()) {
     try {
       //player attacks
+      clearDirectionMsg();
+      await addDirectionMsg(
+        `Waiting on your target, Captain ${player.displayName}! `,
+        2000
+      );
       const playersAtk = await playersAtkChoice(computerGameBoard.board);
-      computerGameBoard.receiveAttack(playersAtk[0], playersAtk[1]);
+      const pHitOrMiss = computerGameBoard.receiveAttack(
+        playersAtk[0],
+        playersAtk[1]
+      );
+      clearDirectionMsg();
+      await addDirectionMsg(
+        `You fire a shot into enemy waters and its a ${pHitOrMiss}.`,
+        3600
+      );
 
       //computer attacks
+
       computer.smartMove(playerGameBoard.board);
-      playerGameBoard.receiveAttack(computer.attack[0], computer.attack[1]);
+      const cHitOrMiss = playerGameBoard.receiveAttack(
+        computer.attack[0],
+        computer.attack[1]
+      );
+      clearDirectionMsg();
+      await addDirectionMsg(
+        `The enemy fires a shot back and its a ${cHitOrMiss}.`,
+        3600
+      );
       renderComputersAttack(computer.attack[0], computer.attack[1]);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
   console.log("game ended");
@@ -83,9 +112,5 @@ const setComputerShipsOnGameboard = (computerGameBoard) => {
 
 const clearGameScreen = () => {
   document.querySelector("content").innerHTML = "";
-};
-
-const clearControls = () => {
-  document.querySelector("#controls").innerHTML = "";
 };
 gameLoop();
