@@ -110,35 +110,3 @@ class Player {
 }
 
 module.exports = Player;
-// if (
-//   prevY + 1 <= 9 &&
-//   gameboard[prevY + 1][prevX] !== "h" &&
-//   gameboard[prevY + 1][prevX] !== "m"
-// ) {
-//   this.#attack = [prevY + 1, prevX];
-//   return;
-// }
-// if (
-//   prevX + 1 <= 9 &&
-//   gameboard[prevY][prevX + 1] !== "h" &&
-//   gameboard[prevY][prevX + 1] !== "m"
-// ) {
-//   this.#attack = [prevY, prevX + 1];
-//   return;
-// }
-// if (
-//   prevY - 1 >= 0 &&
-//   gameboard[prevY - 1][prevX] !== "h" &&
-//   gameboard[prevY - 1][prevX] !== "m"
-// ) {
-//   this.#attack = [prevY - 1, prevX];
-//   return;
-// }
-// if (
-//   prevX - 1 >= 0 &&
-//   gameboard[prevY][prevX - 1] !== "h" &&
-//   gameboard[prevY][prevX - 1] !== "m"
-// ) {
-//   this.#attack = [prevY, prevX - 1];
-//   return;
-// }

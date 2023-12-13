@@ -93,21 +93,60 @@ const initGameBoards = async () => {
 const setPlayerShipsOnGameboard = async (playerGameBoard) => {
   const shipArray = await placeShipScreen();
   for (let ship of shipArray) {
-    console.log(playerGameBoard.placeShip(ship));
+    playerGameBoard.placeShip(ship);
   }
 };
 
 const setComputerShipsOnGameboard = (computerGameBoard) => {
-  const shipArray = [
-    new Ship(5, [0, 0], "Carrier", "vertical"),
-    new Ship(4, [1, 0], "Battleship", "vertical"),
-    new Ship(3, [2, 0], "Destroyer", "vertical"),
-    new Ship(3, [3, 0], "Submarine", "vertical"),
-    new Ship(2, [4, 0], "Patrol Boat", "vertical"),
-  ];
+  const shipArray = computerShipLocations();
 
   for (let ship of shipArray) {
-    computerGameBoard.placeShip(ship);
+    console.log(computerGameBoard.placeShip(ship));
+  }
+};
+//static ship spawns for now
+const computerShipLocations = () => {
+  switch (Math.floor(Math.random() * 5)) {
+    case 0:
+      return [
+        new Ship(5, [0, 0], "Carrier", "vertical"),
+        new Ship(4, [6, 0], "Battleship", "vertical"),
+        new Ship(3, [2, 5], "Destroyer", "horizontal"),
+        new Ship(3, [1, 6], "Submarine", "vertical"),
+        new Ship(2, [8, 8], "Patrol Boat", "horizontal"),
+      ];
+    case 1:
+      return [
+        new Ship(5, [2, 3], "Carrier", "vertical"),
+        new Ship(4, [6, 0], "Battleship", "horizontal"),
+        new Ship(3, [5, 6], "Destroyer", "horizontal"),
+        new Ship(3, [8, 7], "Submarine", "vertical"),
+        new Ship(2, [2, 8], "Patrol Boat", "vertical"),
+      ];
+    case 2:
+      return [
+        new Ship(5, [2, 7], "Carrier", "horizontal"),
+        new Ship(4, [6, 2], "Battleship", "horizontal"),
+        new Ship(3, [3, 2], "Destroyer", "vertical"),
+        new Ship(3, [7, 9], "Submarine", "horizontal"),
+        new Ship(2, [0, 4], "Patrol Boat", "vertical"),
+      ];
+    case 3:
+      return [
+        new Ship(5, [3, 4], "Carrier", "vertical"),
+        new Ship(4, [7, 5], "Battleship", "vertical"),
+        new Ship(3, [5, 1], "Destroyer", "horizontal"),
+        new Ship(3, [0, 1], "Submarine", "horizontal"),
+        new Ship(2, [0, 6], "Patrol Boat", "horizontal"),
+      ];
+    case 4:
+      return [
+        new Ship(5, [3, 5], "Carrier", "horizontal"),
+        new Ship(4, [4, 0], "Battleship", "horizontal"),
+        new Ship(3, [2, 1], "Destroyer", "vertical"),
+        new Ship(3, [1, 7], "Submarine", "vertical"),
+        new Ship(2, [8, 2], "Patrol Boat", "horizontal"),
+      ];
   }
 };
 
