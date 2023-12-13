@@ -16,6 +16,7 @@
 
 .ship-highlight {
   background-color: lightblue;
+  cursor: pointer;
 }
 
 .ship-placed {

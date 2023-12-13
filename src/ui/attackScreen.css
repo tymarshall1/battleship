@@ -1,5 +1,5 @@
 .grid-gap {
-  gap: 2rem;
+  gap: 5rem;
 }
 
 .directions-container {
@@ -61,6 +61,10 @@
   margin: 0 auto;
   letter-spacing: 0.1em;
   animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+.ship-sunk {
+  background-color: red;
 }
 
 @keyframes typing {

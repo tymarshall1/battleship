@@ -1,0 +1,21 @@
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  margin: auto;
+  min-width: 25%;
+  min-height: 25%;
+  background-color: navy;
+  color: #d0ccd0;
+}
+
+.modal[open]::backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.play-again-btn {
+  padding: 1rem;
+}

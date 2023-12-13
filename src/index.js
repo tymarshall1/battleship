@@ -4,12 +4,14 @@ import Player from "./game logic/player.js";
 import { placeShipScreen } from "./ui/placeShipScreen";
 import GameBoard from "./game logic/gameboard";
 import Ship from "./game logic/ship";
+import gameOverModal from "./ui/gameOverScreen";
 import {
   attackScreen,
   playersAtkChoice,
   renderComputersAttack,
   addDirectionMsg,
   clearDirectionMsg,
+  highlightSunkShips,
 } from "./ui/attackScreen";
 
 const gameLoop = async () => {
@@ -26,30 +28,33 @@ const gameLoop = async () => {
   clearDirectionMsg();
 
   attackScreen(playerGameBoard, computerGameBoard);
-  // await addDirectionMsg(
-  //   `Welcome to the battlefield, Captain ${player.displayName}.`,
-  //   3500
-  // );
+  await addDirectionMsg(
+    `Welcome to the battlefield, Captain ${player.displayName}.`,
+    3500
+  );
 
   //while the computer and player both have ships still
   while (!playerGameBoard.allShipsSunk() && !computerGameBoard.allShipsSunk()) {
     try {
-      //player attacks
-      // clearDirectionMsg();
-      // await addDirectionMsg(
-      //   `Waiting on your target, Captain ${player.displayName}! `,
-      //   2000
-      // );
+      // player attacks
+      clearDirectionMsg();
+      await addDirectionMsg(
+        `Waiting on your target, Captain ${player.displayName}! `,
+        2000
+      );
       const playersAtk = await playersAtkChoice(computerGameBoard.board);
       const pHitOrMiss = computerGameBoard.receiveAttack(
         playersAtk[0],
         playersAtk[1]
       );
-      // clearDirectionMsg();
-      // await addDirectionMsg(
-      //   `You fire a shot into enemy waters and its a ${pHitOrMiss}.`,
-      //   3600
-      // );
+
+      highlightSunkShips(computerGameBoard.shipsOnBoard);
+
+      clearDirectionMsg();
+      await addDirectionMsg(
+        `You fire a shot into enemy waters and its a ${pHitOrMiss}.`,
+        3600
+      );
 
       //computer attacks
 
@@ -59,17 +64,25 @@ const gameLoop = async () => {
         computer.attack[1]
       );
 
-      // clearDirectionMsg();
-      // await addDirectionMsg(
-      //   `The enemy fires a shot back and its a ${cHitOrMiss}.`,
-      //   3600
-      // );
+      clearDirectionMsg();
+      await addDirectionMsg(
+        `The enemy fires a shot back and its a ${cHitOrMiss}.`,
+        3600
+      );
       renderComputersAttack(computer.attack[0], computer.attack[1]);
     } catch (error) {
       console.error(error);
     }
   }
-  console.log("game ended");
+  const computerHasWon = playerGameBoard.allShipsSunk();
+
+  let winningMsg = "";
+  computerHasWon
+    ? (winningMsg = "The computer kicked your butt. Better luck next time!")
+    : (winningMsg = "You managed to beat the computer. Nicely done!");
+
+  gameOverModal(winningMsg);
+  document.querySelector("#modal").showModal();
 };
 
 const initPlayers = async () => {
@@ -101,7 +114,7 @@ const setComputerShipsOnGameboard = (computerGameBoard) => {
   const shipArray = computerShipLocations();
 
   for (let ship of shipArray) {
-    console.log(computerGameBoard.placeShip(ship));
+    computerGameBoard.placeShip(ship);
   }
 };
 //static ship spawns for now

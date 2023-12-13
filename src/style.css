@@ -63,3 +63,6 @@ content {
 footer {
   grid-row: 4/5;
 }
+button {
+  cursor: pointer;
+}

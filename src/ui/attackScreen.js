@@ -69,6 +69,49 @@ const playersAtkChoice = (computerGameBoard) => {
   });
 };
 
+const highlightSunkShips = (shipsOnBoard) => {
+  for (const ship of shipsOnBoard) {
+    if (ship.totalLength === 0) {
+      if (ship.shipName === "Carrier") {
+        highlightSunkShipsHelper(5, ship);
+      } else if (ship.shipName === "Battleship") {
+        highlightSunkShipsHelper(4, ship);
+      } else if (ship.shipName === "Destroyer") {
+        highlightSunkShipsHelper(3, ship);
+      } else if (ship.shipName === "Submarine") {
+        highlightSunkShipsHelper(3, ship);
+      } else if (ship.shipName === "Patrol Boat") {
+        highlightSunkShipsHelper(2, ship);
+      }
+    }
+  }
+};
+
+const highlightSunkShipsHelper = (length, ship) => {
+  const shipLocation = ship.location;
+  const y = shipLocation[1];
+  const x = shipLocation[0];
+  if (ship.alignment === "vertical") {
+    const newLocation = [y - length, x];
+
+    for (let i = 0; i < length; i++) {
+      const selector = `.computer-grid > .grid-container > .grid-col .grid-square[id="${
+        newLocation[0] + i
+      },${newLocation[1]}"]`;
+      document.querySelector(selector).classList.add("ship-sunk");
+    }
+  } else {
+    const newLocation = [y, x - length];
+
+    for (let i = 0; i < length; i++) {
+      const selector = `.computer-grid > .grid-container > .grid-col .grid-square[id="${
+        newLocation[0]
+      },${newLocation[1] + i}"]`;
+      document.querySelector(selector).classList.add("ship-sunk");
+    }
+  }
+};
+
 const handlePlayerAttack = (e, computerGameBoard) => {
   if (e.target.classList.contains("hit-circle")) return false;
   else if (e.target.classList.contains("miss-circle")) return false;
@@ -145,4 +188,5 @@ export {
   renderComputersAttack,
   addDirectionMsg,
   clearDirectionMsg,
+  highlightSunkShips,
 };
