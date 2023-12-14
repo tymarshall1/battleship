@@ -30,7 +30,7 @@ const gameLoop = async () => {
   attackScreen(playerGameBoard, computerGameBoard);
   await addDirectionMsg(
     `Welcome to the battlefield, Captain ${player.displayName}.`,
-    3500
+    1500
   );
 
   //while the computer and player both have ships still
@@ -40,7 +40,7 @@ const gameLoop = async () => {
       clearDirectionMsg();
       await addDirectionMsg(
         `Waiting on your target, Captain ${player.displayName}! `,
-        2000
+        1000
       );
       const playersAtk = await playersAtkChoice(computerGameBoard.board);
       const pHitOrMiss = computerGameBoard.receiveAttack(
@@ -48,14 +48,14 @@ const gameLoop = async () => {
         playersAtk[1]
       );
 
-      highlightSunkShips(computerGameBoard.shipsOnBoard);
-
       clearDirectionMsg();
       await addDirectionMsg(
         `You fire a shot into enemy waters and its a ${pHitOrMiss}.`,
-        3600
+        1600
       );
+      await highlightSunkShips(computerGameBoard.shipsOnBoard);
 
+      if (computerGameBoard.allShipsSunk()) break;
       //computer attacks
 
       computer.smartMove(playerGameBoard.board);
@@ -67,7 +67,7 @@ const gameLoop = async () => {
       clearDirectionMsg();
       await addDirectionMsg(
         `The enemy fires a shot back and its a ${cHitOrMiss}.`,
-        3600
+        1600
       );
       renderComputersAttack(computer.attack[0], computer.attack[1]);
     } catch (error) {

@@ -69,31 +69,36 @@ const playersAtkChoice = (computerGameBoard) => {
   });
 };
 
-const highlightSunkShips = (shipsOnBoard) => {
+const highlightSunkShips = async (shipsOnBoard) => {
   for (const ship of shipsOnBoard) {
     if (ship.totalLength === 0) {
       if (ship.shipName === "Carrier") {
-        highlightSunkShipsHelper(5, ship);
+        await highlightSunkShipsHelper(5, ship);
       } else if (ship.shipName === "Battleship") {
-        highlightSunkShipsHelper(4, ship);
+        await highlightSunkShipsHelper(4, ship);
       } else if (ship.shipName === "Destroyer") {
-        highlightSunkShipsHelper(3, ship);
+        await highlightSunkShipsHelper(3, ship);
       } else if (ship.shipName === "Submarine") {
-        highlightSunkShipsHelper(3, ship);
+        await highlightSunkShipsHelper(3, ship);
       } else if (ship.shipName === "Patrol Boat") {
-        highlightSunkShipsHelper(2, ship);
+        await highlightSunkShipsHelper(2, ship);
       }
     }
   }
 };
 
-const highlightSunkShipsHelper = (length, ship) => {
+const highlightSunkShipsHelper = async (length, ship) => {
   const shipLocation = ship.location;
   const y = shipLocation[1];
   const x = shipLocation[0];
   if (ship.alignment === "vertical") {
     const newLocation = [y - length, x];
-
+    const selector = `.computer-grid > .grid-container > .grid-col .grid-square[id="${newLocation[0]},${newLocation[1]}"]`;
+    if (document.querySelector(selector).classList.contains("ship-sunk")) {
+      return;
+    }
+    clearDirectionMsg();
+    await addDirectionMsg(`You have sunk the enemys ${ship.shipName}!!!`, 3000);
     for (let i = 0; i < length; i++) {
       const selector = `.computer-grid > .grid-container > .grid-col .grid-square[id="${
         newLocation[0] + i
@@ -102,7 +107,12 @@ const highlightSunkShipsHelper = (length, ship) => {
     }
   } else {
     const newLocation = [y, x - length];
-
+    const selector = `.computer-grid > .grid-container > .grid-col .grid-square[id="${newLocation[0]},${newLocation[1]}"]`;
+    if (document.querySelector(selector).classList.contains("ship-sunk")) {
+      return;
+    }
+    clearDirectionMsg();
+    await addDirectionMsg(`You have sunk the enemys ${ship.shipName}!!!`, 3000);
     for (let i = 0; i < length; i++) {
       const selector = `.computer-grid > .grid-container > .grid-col .grid-square[id="${
         newLocation[0]
